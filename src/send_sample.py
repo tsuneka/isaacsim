@@ -1,62 +1,46 @@
-from isaacsim import SimulationApp
+# 1) まず最初に SimulationApp（他の omni/isaacsim import より前）
+from isaacsim.simulation_app import SimulationApp
 simulation_app = SimulationApp({"headless": False})
 
+# 2) ここから isaacsim を import
 import numpy as np
-
 from isaacsim.core.api.world import World
+from isaacsim.core.prims import Articulation
 from isaacsim.core.utils.stage import add_reference_to_stage
-from isaacsim.storage.native import get_assets_root_path
-from isaacsim.core.prims import SingleArticulation
-from isaacsim.core.api.controllers.articulation_controller import ArticulationController
+from isaacsim.core.utils.nucleus import get_assets_root_path
 from isaacsim.core.utils.types import ArticulationAction
 
-
 def main():
-    world = World(stage_units_in_meters=1.0)
-
+    world = World()
     assets_root = get_assets_root_path()
-    if assets_root is None:
-        raise RuntimeError("Could not find Isaac Sim assets folder (get_assets_root_path returned None).")
 
-    franka_usd = assets_root + "/Isaac/Robots/Franka/franka.usd"
+    # 例：Franka を1体ロード（USD パスは環境で違うことがあるので適宜）
+    franka_prim = "/World/Franka_00"
+    add_reference_to_stage(
+        assets_root + "/Isaac/Robots/Franka/franka_alt_fingers.usd",
+        franka_prim
+    )
 
-    robots = []
-    controllers = []
+    robot = Articulation(prim_path=franka_prim, name="franka_00")
+    world.scene.add(robot)
 
-    # 10台を /World/Franka_00 ... に配置
-    for i in range(10):
-        prim_path = f"/World/Franka_{i:02d}"
-        add_reference_to_stage(usd_path=franka_usd, prim_path=prim_path)
-
-        robot = SingleArticulation(prim_path=prim_path, name=f"franka_{i:02d}")
-        robots.append(robot)
-
-    # 重要：reset 後に articulation が初期化される
     world.reset()
 
-    # コントローラ生成（各ロボットに紐づく）
-    for r in robots:
-        controllers.append(ArticulationController(r))
+    # ★ここがポイント：controller は Articulation から取る（引数で作らない）
+    ctrl = robot.get_articulation_controller()
 
-    # 各ロボットに違う目標を送る（例：joint0 をロボット番号でずらす）
-    t = 0.0
-    dt = 1.0 / 60.0
+    # 例：関節 position を適当に送る（DOF数は robot に合わせる）
+    dof = robot.num_dof
+    q = np.zeros(dof)
 
-    while simulation_app.is_running():
+    for _ in range(300):
         world.step(render=True)
 
-        t += dt
-        for i, r in enumerate(robots):
-            dof = r.num_dof
-            target = np.zeros(dof, dtype=np.float32)
+        # 位置指令
+        action = ArticulationAction(joint_positions=q)
+        ctrl.apply_action(action)
 
-            # 例：各ロボットで位相が違う sin 指令（joint0だけ動かす）
-            target[0] = 0.8 * np.sin(t + 0.4 * i)
-
-            action = ArticulationAction(joint_positions=target)
-            controllers[i].apply_action(action)
-
+    simulation_app.close()
 
 if __name__ == "__main__":
     main()
-    simulation_app.close()
