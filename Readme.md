@@ -1,10 +1,13 @@
 # For isaac sim 4.5.0
-cd your_ws/ //
-source .venv/bin/activate //
+cd your_ws/ 
+
+source .venv/bin/activate 
+
 pip3 install requests
 
 # Clone in your work spase
-git clone https://github.com/tsuneka/isaacsim.git //
+git clone https://github.com/tsuneka/isaacsim.git 
+
 cd isaacsim/src/
 
 # Exec sample code
