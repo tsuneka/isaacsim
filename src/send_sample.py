@@ -1,17 +1,12 @@
-from isaacsim.simulation_app import SimulationApp
-
-# 重要：SimulationAppより前に omni / pxr / isaacsim.* を大量importしない
-simulation_app = SimulationApp({"headless": False})
-
 import math
 import numpy as np
-
+from isaacsim.simulation_app import SimulationApp
+simulation_app = SimulationApp({"headless": False})
 import isaacsim.core.utils.stage as stage_utils
 from isaacsim.core.api.world import World
 from isaacsim.core.prims import SingleArticulation
 from isaacsim.core.utils.types import ArticulationAction
-from isaacsim.storage.native import get_assets_root_path  # 4.5系はこっち推奨（警告回避）
-
+from isaacsim.storage.native import get_assets_root_path 
 
 def main():
     world = World(stage_units_in_meters=1.0)
@@ -69,7 +64,6 @@ def main():
         t += dt
 
     simulation_app.close()
-
 
 if __name__ == "__main__":
     main()
