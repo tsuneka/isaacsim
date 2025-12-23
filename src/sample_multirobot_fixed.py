@@ -95,7 +95,7 @@ def main():
         y = (i // 5) * spacing
 
         env_path = f"/World/envs/carter_{i}"
-        XFormPrim(prim_path=env_path, name=f"env_carter_{i}", position=np.array([x, y, 0.0]))
+        XFormPrim(prim_paths_expr=env_path, name=f"env_carter_{i}", position=np.array([x, y, 0.0]))
 
         # Reference the asset under env_path (this creates the prim, then references the USD)
         add_reference_to_stage(usd_path=carter_usd_path, prim_path=env_path)
