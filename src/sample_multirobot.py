@@ -54,10 +54,10 @@ def main():
     world.scene.add_default_ground_plane()
 
     # --- 10x Franka ---
-    franka_usd_candidates = [
-        f"{assets_root}/Isaac/Robots/Franka/franka_alt_fingers.usd",
-        f"{assets_root}/Isaac/Robots/Franka/franka.usd",
-    ]
+    # franka_usd_candidates = [
+    #     f"{assets_root}/Isaac/Robots/Franka/franka_alt_fingers.usd",
+    #     f"{assets_root}/Isaac/Robots/Franka/franka.usd",
+    # ]
     # frankas = []
     # for i in range(10):
     #     prim_path = f"/World/envs/franka_{i}"
@@ -70,10 +70,10 @@ def main():
     # --- 10x Mobile robots with Lidar (Nova Carter ROS) ---
     # In Isaac Sim, this USD typically includes RTX Lidar prim(s) already.
     carter_usd_candidates = [
-        f"{assets_root}/Isaac/Samples/ROS2/Robots/Nova_Carter_ROS.usd",
-        f"{assets_root}/Isaac/Samples/ROS2/Robots/Nova_Carter.usd",
         f"{assets_root}/Isaac/Robots/Carter/carter_v2.usd",
         f"{assets_root}/Isaac/Robots/Carter/carter.usd",
+        f"{assets_root}/Isaac/Samples/ROS2/Robots/Nova_Carter_ROS.usd",
+        f"{assets_root}/Isaac/Samples/ROS2/Robots/Nova_Carter.usd",
     ]
     carters = []
     for i in range(10):
