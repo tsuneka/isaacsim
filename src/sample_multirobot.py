@@ -58,14 +58,14 @@ def main():
         f"{assets_root}/Isaac/Robots/Franka/franka_alt_fingers.usd",
         f"{assets_root}/Isaac/Robots/Franka/franka.usd",
     ]
-    frankas = []
-    for i in range(10):
-        prim_path = f"/World/envs/franka_{i}"
-        _try_add_reference(franka_usd_candidates, prim_path)
+    # frankas = []
+    # for i in range(10):
+    #     prim_path = f"/World/envs/franka_{i}"
+    #     _try_add_reference(franka_usd_candidates, prim_path)
 
-        robot = SingleArticulation(prim_path=prim_path, name=f"franka_{i}")
-        world.scene.add(robot)
-        frankas.append(robot)
+    #     robot = SingleArticulation(prim_path=prim_path, name=f"franka_{i}")
+    #     world.scene.add(robot)
+    #     frankas.append(robot)
 
     # --- 10x Mobile robots with Lidar (Nova Carter ROS) ---
     # In Isaac Sim, this USD typically includes RTX Lidar prim(s) already.
@@ -86,14 +86,16 @@ def main():
 
     # Reset + initialize (important)
     world.reset()
-    for r in frankas + carters:
+    # for r in frankas + carters:
+    #     r.initialize()
+    for r in carters:
         r.initialize()
 
-    # --- Place robots to avoid collisions ---
-    # Frankas: near origin
-    for i, r in enumerate(frankas):
-        x, y = _grid_xy(i, cols=5, spacing=1.8, origin_xy=(0.0, 0.0))
-        r.set_world_pose(position=np.array([x, y, 0.0], dtype=np.float32))
+    # # --- Place robots to avoid collisions ---
+    # # Frankas: near origin
+    # for i, r in enumerate(frankas):
+    #     x, y = _grid_xy(i, cols=5, spacing=1.8, origin_xy=(0.0, 0.0))
+    #     r.set_world_pose(position=np.array([x, y, 0.0], dtype=np.float32))
 
     # Carters: shifted in +Y
     for i, r in enumerate(carters):
@@ -101,7 +103,7 @@ def main():
         r.set_world_pose(position=np.array([x, y, 0.0], dtype=np.float32))
 
     # --- Controllers ---
-    franka_ctrls = [r.get_articulation_controller() for r in frankas]
+    # franka_ctrls = [r.get_articulation_controller() for r in frankas]
     carter_ctrls = [r.get_articulation_controller() for r in carters]
 
     # --- Carter wheel DOF indices (common names for Nova Carter) ---
@@ -149,10 +151,10 @@ def main():
         world.step(render=True)
 
         # --- Franka: small sinusoidal motion on 2nd joint (9 DOF array) ---
-        for i, ctrl in enumerate(franka_ctrls):
-            q = np.zeros(9, dtype=np.float32)
-            q[1] = 0.5 * math.sin(t + 0.3 * i)
-            ctrl.apply_action(ArticulationAction(joint_positions=q))
+        # for i, ctrl in enumerate(franka_ctrls):
+        #     q = np.zeros(9, dtype=np.float32)
+        #     q[1] = 0.5 * math.sin(t + 0.3 * i)
+        #     ctrl.apply_action(ArticulationAction(joint_positions=q))
 
         # --- Carters: move forward with a slight, phase-shifted turn ---
         for i, (r, ctrl, (li, ri)) in enumerate(zip(carters, carter_ctrls, carter_wheel_indices)):
