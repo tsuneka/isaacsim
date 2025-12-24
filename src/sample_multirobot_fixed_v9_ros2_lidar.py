@@ -122,17 +122,7 @@ def _spawn_carter_with_lidar(i: int, carter_usd: str, xy: Tuple[float, float]) -
     lidar_path = f"{carter_path}/rtx_lidar"
     if not is_prim_path_valid(lidar_path):
         # Minimal RTX Lidar config; tune as needed
-        lidar_cfg = {
-            "minRange": 0.1,
-            "maxRange": 50.0,
-            "horizontalFov": 360.0,
-            "verticalFov": 30.0,
-            "horizontalResolution": 0.4,
-            "verticalResolution": 1.0,
-            "rotationRate": 10.0,
-            "drawPoints": False,
-            "drawLines": False,
-        }
+        lidar_cfg = "Example_Rotary"
 
         # IMPORTANT: orientation must be quaternion (GfQuatd), not Euler (GfVec3d)
         omni.kit.commands.execute(
