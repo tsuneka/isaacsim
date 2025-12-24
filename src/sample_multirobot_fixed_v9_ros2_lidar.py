@@ -75,10 +75,10 @@ def _assets_carter_usd() -> str:
 
     if root:
         # 典型: omniverse://localhost/NVIDIA/Assets/Isaac/4.5
-        return f"{root}/Isaac/Robots/Carter/nova_carter.usd"
+        return f"{root}/Isaac/Robots/Carter/nova_carter_sensors.usd"
 
     # Hosted fallback（外部ネットワークが通る場合のみ）
-    return "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5/Isaac/Robots/Carter/nova_carter.usd"
+    return "https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/4.5/Isaac/Robots/Carter/nova_carter_sensors.usd"
 
 
 
