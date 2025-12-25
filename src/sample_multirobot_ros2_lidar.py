@@ -10,18 +10,6 @@ Key points for Isaac Sim 4.5:
 Tested for the user's environment pattern:
   isaacsim==4.5.0 (pip), Python 3.10, ROS 2 Humble (system rclpy)
 """
-
-from isaacsim.simulation_app import SimulationApp
-
-# -----------------------------------------------------------------------------
-# Start Kit first (IMPORTANT: do this before importing omni/pxr modules)
-# -----------------------------------------------------------------------------
-CONFIG = {
-    "headless": False,
-    "renderer": "RayTracedLighting",  # safe default; change if you want
-}
-simulation_app = SimulationApp(CONFIG)
-
 # -----------------------------------------------------------------------------
 # Imports that touch omni/pxr AFTER SimulationApp has started
 # -----------------------------------------------------------------------------
