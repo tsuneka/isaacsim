@@ -30,9 +30,10 @@ def _enable_ros2_bridge() -> None:
 
 def _find_wheel_indices(robot: SingleArticulation) -> Tuple[int, int]:
     wheel_name_candidates = [
-        ("joint_wheel_left", "joint_wheel_right"),
-        ("left_wheel_joint", "right_wheel_joint"),
-        ("wheel_left_joint", "wheel_right_joint"),
+        ("joint_wheel_left", "joint_wheel_right") # joint_name 
+        # ("wheel_left", "wheel_right"), # link_name
+        # arg of get_dof_index() is unknown whether link or joint. now(12/25), i think arg is joint. show the below ref. 
+        # https://docs.isaacsim.omniverse.nvidia.com/4.5.0/py/source/extensions/isaacsim.robot.manipulators/docs/index.html#isaacsim.robot.manipulators.manipulators.SingleManipulator.get_dof_index
     ]
     for left_name, right_name in wheel_name_candidates:
         try:
