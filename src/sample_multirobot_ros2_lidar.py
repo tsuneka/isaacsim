@@ -35,7 +35,7 @@ lidarInterface = _range_sensor.acquire_lidar_sensor_interface()  # LiDAR セン�
 LIDAR_SCAN_FREQ = 180.0  # 回転周波数 [Hz]
 LIDAR_H_RES = 2.0  # 水平分解能 [deg]
 LIDAR_V_RES = 2.0  # 垂直分解能 [deg]
-LIDAR_Z_OFFSET = 0.1
+LIDAR_Z_OFFSET = 0.6
 # -----------------------------------------------------------------------------
 # Helpers
 # -----------------------------------------------------------------------------
