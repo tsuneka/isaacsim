@@ -98,7 +98,7 @@ def main() -> None:
         cmd_node.start()
         cmd_nodes.append(cmd_node)
 
-        joint_names = robot.get_dof_names()
+        joint_names = ["joint_wheel_left", "joint_wheel_right"]
         pub_node = CarterPubNode(
             lidar_path=ctx.lidar_path,
             joint_names=joint_names,
