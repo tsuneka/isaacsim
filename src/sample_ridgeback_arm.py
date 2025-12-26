@@ -60,7 +60,11 @@ def _find_articulation_root(stage, root_path: str) -> str | None:
         return None
 
     def _is_articulation(prim) -> bool:
-        return prim.HasAPI(UsdPhysics.ArticulationRootAPI) or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
+        return (
+            prim.HasAPI(UsdPhysics.ArticulationRootAPI)
+            or prim.HasAPI(PhysxSchema.PhysxArticulationRootAPI)
+            or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
+        )
 
     if _is_articulation(root_prim):
         return str(root_prim.GetPath())
@@ -72,7 +76,6 @@ def _find_articulation_root(stage, root_path: str) -> str | None:
             return str(prim.GetPath())
 
     return None
-
 
 def _find_wheel_groups(robot: SingleArticulation) -> Tuple[List[int], List[int]]:
     # Split wheel joints into left/right groups based on names.
@@ -108,7 +111,7 @@ def main() -> None:
     world = World(stage_units_in_meters=1.0)
     world.scene.add_default_ground_plane()
 
-    prim_path = "/ridgeback"
+    prim_path = "/World/ridgeback"
     usd_candidates = _usd_candidates(robot_kind, assets_root)
     _try_add_reference(usd_candidates, prim_path)
 
