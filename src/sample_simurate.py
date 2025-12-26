@@ -63,7 +63,7 @@ def main() -> None:
     carter_usd = _assets_carter_usd()
 
     # Spawn a single Carter + LiDAR (adjust N for multiple robots)
-    N = 1
+    N = 5
     carters: List[SingleArticulation] = []
     lidar_ctxs: List[SimpleNamespace] = []
 
