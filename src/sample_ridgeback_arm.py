@@ -62,7 +62,7 @@ def _find_articulation_root(stage, root_path: str) -> str | None:
     def _is_articulation(prim) -> bool:
         return (
             prim.HasAPI(UsdPhysics.ArticulationRootAPI)
-            or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
+            or prim.HasAPI(PhysxSchema.PhysxArticulationRootAPI)
             or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
         )
 
@@ -76,6 +76,25 @@ def _find_articulation_root(stage, root_path: str) -> str | None:
             return str(prim.GetPath())
 
     return None
+
+
+
+
+def _find_articulation_root_any(stage, name_hint: str | None = None) -> tuple[str | None, list[str]]:
+    roots: list[str] = []
+    for prim in Usd.PrimRange(stage.GetPseudoRoot()):
+        if prim.HasAPI(UsdPhysics.ArticulationRootAPI) or prim.HasAPI(PhysxSchema.PhysxArticulationRootAPI) or prim.HasAPI(PhysxSchema.PhysxArticulationAPI):
+            roots.append(str(prim.GetPath()))
+
+    if not roots:
+        return None, roots
+
+    if name_hint:
+        for p in roots:
+            if name_hint.lower() in p.lower():
+                return p, roots
+
+    return roots[0], roots
 
 def _find_wheel_groups(robot: SingleArticulation) -> Tuple[List[int], List[int]]:
     # Split wheel joints into left/right groups based on names.
@@ -118,10 +137,14 @@ def main() -> None:
     stage = omni.usd.get_context().get_stage()
     art_path = _find_articulation_root(stage, prim_path)
     if art_path is None:
-        raise RuntimeError(
-            f"No articulation root found under {prim_path}. "
-            "Check the USD or adjust the prim path candidates."
-        )
+        art_path, found = _find_articulation_root_any(stage, name_hint="ridgeback")
+        if art_path is None:
+            raise RuntimeError(
+                f"No articulation root found under {prim_path}. "
+                f"Found articulation roots: {found}. "
+                "Check the USD or adjust the prim path candidates."
+            )
+        print(f"[INFO] Using articulation root: {art_path}")
 
     robot = SingleArticulation(prim_path=art_path, name=robot_kind)
     world.scene.add(robot)
