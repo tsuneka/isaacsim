@@ -62,7 +62,7 @@ def _find_articulation_root(stage, root_path: str) -> str | None:
     def _is_articulation(prim) -> bool:
         return (
             prim.HasAPI(UsdPhysics.ArticulationRootAPI)
-            or prim.HasAPI(PhysxSchema.PhysxArticulationRootAPI)
+            or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
             or prim.HasAPI(PhysxSchema.PhysxArticulationAPI)
         )
 
