@@ -2,7 +2,7 @@ services:
   gpu:
     build:
       context: ../
-      dockerfile: isaac_sim/gpu/Dockerfile
+      dockerfile: docker_env/gpu/Dockerfile
       args:
         - UID=${UID}
         - GID=${GID}
