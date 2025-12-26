@@ -17,19 +17,16 @@ cd docker_env/
 sudo docker compose build gpu
 sudo docker compose run -u <username> gpu
 ```
-## Create virtual env for Issacsim
+## Create virtual environment for Issacsim
 ```
 cd isaacsim/ 
 # activate venv environment
 source .venv/bin/activate 
 # If not, install the following packages:
 pip3 install requests
-```
-# Clone in your work spase
-```
 git clone https://github.com/tsuneka/isaacsim.git 
 ```
-# Exec sample code
+## Execute sample code
 ```
 cd isaacsim/src/
 # This is the multi-munipulator example.
