@@ -23,7 +23,7 @@ import carb
 from pxr import Gf
 
 import omni.replicator.core as rep
-
+from pxr import UsdGeom 
 from isaacsim.core.api import World
 from isaacsim.core.utils.stage import add_reference_to_stage
 from isaacsim.core.utils.prims import create_prim, is_prim_path_valid
@@ -35,7 +35,7 @@ lidarInterface = _range_sensor.acquire_lidar_sensor_interface()  # LiDAR セン�
 LIDAR_SCAN_FREQ = 180.0  # 回転周波数 [Hz]
 LIDAR_H_RES = 2.0  # 水平分解能 [deg]
 LIDAR_V_RES = 2.0  # 垂直分解能 [deg]
-
+LIDAR_Z_OFFSET = 0.1
 # -----------------------------------------------------------------------------
 # Helpers
 # -----------------------------------------------------------------------------
@@ -108,23 +108,25 @@ def _spawn_carter_with_lidar(self, i: int, carter_usd: str, xy: Tuple[float, flo
     if not is_prim_path_valid(lidar_path):
 
         # IMPORTANT: orientation must be quaternion (GfQuatd), not Euler (GfVec3d)
-        omni.kit.commands.execute(
-            "RangeSensorCreateLidar",
-            path=lidar_path,
-            parent=None,
-            min_range=0.05,  # 最小計測距離
-            max_range=30.0,  # 最大計測距離
-            draw_points=True,  # ポイント表示を有効化
-            draw_lines=False,  # 線表示を無効化
-            horizontal_fov=360.0,  # 水平視野角
-            vertical_fov=180.0,  # 垂直視野角
-            horizontal_resolution=LIDAR_H_RES,  # 水平分解能
-            vertical_resolution=LIDAR_V_RES,  # 垂直分解能
-            rotation_rate=LIDAR_SCAN_FREQ,  # 回転速度
-            high_lod=True,  # 高 LOD を使用
-            yaw_offset=0.0,  # ヨーオフセット
-            enable_semantics=False,  # セマンティクス無効
-        )
+        _, prim = omni.kit.commands.execute(
+                "RangeSensorCreateLidar",
+                path=lidar_path,
+                parent=None,
+                min_range=0.05,  # 最小計測距離
+                max_range=30.0,  # 最大計測距離
+                draw_points=True,  # ポイント表示を有効化
+                draw_lines=False,  # 線表示を無効化
+                horizontal_fov=360.0,  # 水平視野角
+                vertical_fov=180.0,  # 垂直視野角
+                horizontal_resolution=LIDAR_H_RES,  # 水平分解能
+                vertical_resolution=LIDAR_V_RES,  # 垂直分解能
+                rotation_rate=LIDAR_SCAN_FREQ,  # 回転速度
+                high_lod=True,  # 高 LOD を使用
+                yaw_offset=0.0,  # ヨーオフセット
+                enable_semantics=False,  # セマンティクス無効
+            )
+    
+    UsdGeom.XformCommonAPI(prim).SetTranslate((0.0, 0.0, LIDAR_Z_OFFSET))
 
 def get_head_lidar_pointcloud(self):  # LiDAR の点群を取得し前処理して返す
     points = lidarInterface.get_point_cloud_data(self.lidar_path)  # 点群データを取得
