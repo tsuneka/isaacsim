@@ -1,0 +1,37 @@
+services:
+  gpu:
+    build:
+      context: ../
+      dockerfile: isaac_sim/gpu/Dockerfile
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - USERNAME=${USERNAME}
+    env_file:
+      - .env
+    image: isaac_sim
+    command: /bin/bash
+    ports:
+      - 8000:8000
+    working_dir: /home/${USERNAME}
+    tty: true
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /home/${USERNAME}/.Xauthority:/root/.Xauthority
+      - /usr/share/vulkan/icd.d:/usr/share/vulkan/icd.d:ro
+    gpus: all
+    environment:
+      ROS_DOMAIN_ID: "20"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility,graphics,display,video
+      DISPLAY: $DISPLAY
+      QT_X11_NO_MITSHM: 1
+      CARB_NGX_DISABLE: "1"
+      ISAACSIM_ARGS: "--/rtx/post/dlss/enabled=false --/rtx/post/dlss/execMode=0"
+    privileged: true
+    shm_size: '16gb'
+    network_mode: "host"
+    ipc: host
